@@ -41,22 +41,12 @@ namespace SE_cw1_maria
             // ABREVIATIONS - read file
             using (var reader = new StreamReader(@"textwords.csv"))
             {
-                
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
                     var values = line.Split(',');
                     abb.Add(values[0]);
                     def.Add(values[1]);
-                }
-
-                foreach (string word in abb)
-                {
-                    listbox.Items.Add(word);
-                }
-                foreach (string word in def)
-                {
-                    listbox2.Items.Add(word);
                 }
             }
         }
@@ -100,7 +90,10 @@ namespace SE_cw1_maria
         private void sms_process(Message message)
         {
             Sms sms = new Sms();
-            
+
+            sms.id = message.id;
+            sms.body = message.body;
+
             // SENDER - int
             sms.Sender = Convert.ToInt32((message.body).Substring(0, (message.body).IndexOf(" ")));
             label.Content = sms.Sender;
@@ -119,30 +112,11 @@ namespace SE_cw1_maria
             }
 
             // ABBREVIATIONS
-            foreach (string word in message.body.Split(' '))
-            {
-                foreach (string abr in abb)
-                {
-                    if (word.Equals(abr))
-                    {
-                        // Find the actual words
-                        int index = abb.IndexOf(abr);
-                        string all = def[index];
+            string newM = abbreviations(sms.Text);
 
-                        // Replace word for actual words
-                        string words = "<" + all + ">";
-                        string newM = (sms.Text).Replace(word, words);
-                        sms.Text = newM;
-                        message.body = newM;
-                        label.Content = word;
-                        label3.Content = message.body;
-                    }
-                    else
-                    {
-                        label.Content = "Abreviation not found";
-                    }
-                }
-            }
+            MessageBox.Show(newM);
+            sms.Text = newM;
+
             outputFile(sms);
         }
 
@@ -187,9 +161,36 @@ namespace SE_cw1_maria
 
         }
 
-        private void abbreviations(string message)
+        private string abbreviations(string message)
         {
+            MessageBox.Show(message);
+            foreach (string word in message.Split(' '))
+            {
+                foreach (string abr in abb)
+                {
+                    if (word.Equals(abr))
+                    {
+                        // Find the actual words
+                        int index = abb.IndexOf(abr);
+                        string all = def[index];
 
+                        // Replace word for actual words
+                        string words = "<" + all + ">";
+                        string newM = (message).Replace(word, words);
+                        return newM; 
+
+                        //sms.Text = newM;
+                        //message.body = newM;
+                        //label.Content = word;
+                        //label3.Content = message.body;
+                    }
+                    else
+                    {
+                        return message;
+                    }
+                }
+            }
+            return message;
         }
 
         private void outputFile(object message)

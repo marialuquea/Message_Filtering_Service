@@ -13,8 +13,6 @@
         <Label Name="label" Content="" HorizontalAlignment="Left" Margin="50,154,0,0" VerticalAlignment="Top" Height="35" Width="415"/>
         <Label x:Name="label2" Content="" HorizontalAlignment="Left" Margin="50,194,0,0" VerticalAlignment="Top" Height="35" Width="415"/>
         <Label x:Name="label3" Content="" HorizontalAlignment="Left" Margin="50,234,0,0" VerticalAlignment="Top" Height="35" Width="415"/>
-        <ListBox Name="listbox" HorizontalAlignment="Left" Height="157" Margin="282,154,0,0" VerticalAlignment="Top" Width="67"/>
-        <ListBox x:Name="listbox2" HorizontalAlignment="Left" Height="157" Margin="371,154,0,0" VerticalAlignment="Top" Width="138"/>
-
+       
     </Grid>
 </Window>
