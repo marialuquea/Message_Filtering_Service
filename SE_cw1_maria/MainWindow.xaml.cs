@@ -47,7 +47,7 @@ namespace SE_cw1_maria
         // CLICK BUTTON TO PROCESS MESSAGE
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Sms sms = new Sms();
+            Message message = new Message();
 
             // IF TEXTBOXES ARE NOT EMPTY
             if (!(txtBoxbody.Text).Equals("") && !(txtBoxheader.Text).Equals(""))
@@ -55,36 +55,27 @@ namespace SE_cw1_maria
                 string header = txtBoxheader.Text.ToUpper();
                 string body = txtBoxbody.Text;
 
-                sms.id = header;
-                sms.body = body;
+                message.id = header;
+                message.body = body;
                 
-
-                if (header[0].Equals('S'))
-                {
-                    sms_process(sms);
-                }
-                else if (header[0].Equals('E'))
-                {
-                    email_process(sms);
-                }
-                else if (header[0].Equals('T'))
-                {
-                    tweet_process(sms);
-                }
-                else
-                {
-                    MessageBox.Show("Insert a valid ID please starting with either S, E or T.");
-                }
+                // HEADER OPTIONS - S, E or T
+                if (header[0].Equals('S')) { sms_process(message); }
+                else if (header[0].Equals('E')) { email_process(message); }
+                else if (header[0].Equals('T')) { tweet_process(message); }
+                else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
             }
             else
             {
                 MessageBox.Show("Fill in both boxes pls");
             }
         }
-
-        // SMS
-        private void sms_process(Sms sms)
+        
+        private void sms_process(Message message)
         {
+            Sms sms = new Sms();
+            sms.id = message.id;
+            sms.body = message.body;
+
             // SENDER - int
             sms.Sender = (sms.body).Substring(0, (sms.body).IndexOf(" ")); // first word (number)
             label.Content = sms.Sender;
@@ -104,11 +95,8 @@ namespace SE_cw1_maria
 
             // ABBREVIATIONS
             string newM = abbreviations(sms.Text);
-
             sms.Text = newM;
-
             label3.Content = sms.Text;
-
             outputFile(sms);
         }
 
@@ -140,6 +128,11 @@ namespace SE_cw1_maria
         private void tweet_process(Message message)
         {
             Tweet tweet = new Tweet();
+            tweet.id = message.id;
+            tweet.body = message.body;
+
+            List<string> mentions = new List<string>();
+            Dictionary<string, int> hashtags = new Dictionary<string, int>();
 
             // SENDER - max 15 chars, starts with @
             tweet.Sender = message.body.Substring(0, (message.body).IndexOf(" "));
@@ -151,9 +144,38 @@ namespace SE_cw1_maria
             tweet.Text = str;
             label2.Content = tweet.Text;
 
-        }
+            // SEARCH THROUGH WORDS 
+            string sentence = tweet.Text;
 
-        // CHANGE LOL TO <Laughing out loud>
+            foreach (string word in (sentence).Split(' '))
+            {
+                // If there is a mention
+                if (word.StartsWith("@"))
+                {
+                    mentions.Add(word);
+                }
+
+                // If there is a hashtag
+                if (word.StartsWith("#"))
+                {
+                    if (hashtags.ContainsKey(word))
+                    {
+                        hashtags[word] += 1;
+                    }
+                    else
+                    {
+                        hashtags.Add(word, 1);
+                    }
+                }
+            }
+
+            // ABBREVIATIONS
+            string newM = abbreviations(tweet.Text);
+            tweet.Text = newM;
+            label3.Content = tweet.Text;
+            outputFile(tweet);
+        }
+        
         private string abbreviations(string sentence)
         {
             foreach (string word in (sentence).Split(' '))
