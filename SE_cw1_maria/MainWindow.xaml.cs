@@ -30,16 +30,9 @@ namespace SE_cw1_maria
         public MainWindow()
         {
             InitializeComponent();
-
-            // READ JSON FILES
             
-
-
-
-
-
             // ABREVIATIONS - read file
-            using (var reader = new StreamReader(@"textwords.csv"))
+            using (var reader = new StreamReader(@"../../../textwords.csv"))
             {
                 while (!reader.EndOfStream)
                 {
@@ -51,30 +44,32 @@ namespace SE_cw1_maria
             }
         }
 
+        // CLICK BUTTON TO PROCESS MESSAGE
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Message message = new Message();
+            Sms sms = new Sms();
 
+            // IF TEXTBOXES ARE NOT EMPTY
             if (!(txtBoxbody.Text).Equals("") && !(txtBoxheader.Text).Equals(""))
             {
                 string header = txtBoxheader.Text.ToUpper();
                 string body = txtBoxbody.Text;
 
-                message.id = header;
-                message.body = body;
+                sms.id = header;
+                sms.body = body;
                 
 
                 if (header[0].Equals('S'))
                 {
-                    sms_process(message);
+                    sms_process(sms);
                 }
                 else if (header[0].Equals('E'))
                 {
-                    email_process(message);
+                    email_process(sms);
                 }
                 else if (header[0].Equals('T'))
                 {
-                    tweet_process(message);
+                    tweet_process(sms);
                 }
                 else
                 {
@@ -87,22 +82,18 @@ namespace SE_cw1_maria
             }
         }
 
-        private void sms_process(Message message)
+        // SMS
+        private void sms_process(Sms sms)
         {
-            Sms sms = new Sms();
-
-            sms.id = message.id;
-            sms.body = message.body;
-
             // SENDER - int
-            sms.Sender = Convert.ToInt32((message.body).Substring(0, (message.body).IndexOf(" ")));
+            sms.Sender = (sms.body).Substring(0, (sms.body).IndexOf(" ")); // first word (number)
             label.Content = sms.Sender;
 
             // TEXT - max 140 characters
-            if (message.body.Length > 0)
+            if (sms.body.Length > 0)
             {
-                int i = message.body.IndexOf(" ") + 1;
-                string str = message.body.Substring(i);
+                int i = sms.body.IndexOf(" ") + 1;
+                string str = sms.body.Substring(i); // delete the fisrt word
                 sms.Text = str;
                 label2.Content = sms.Text;
             }
@@ -114,8 +105,9 @@ namespace SE_cw1_maria
             // ABBREVIATIONS
             string newM = abbreviations(sms.Text);
 
-            MessageBox.Show(newM);
             sms.Text = newM;
+
+            label3.Content = sms.Text;
 
             outputFile(sms);
         }
@@ -161,10 +153,10 @@ namespace SE_cw1_maria
 
         }
 
-        private string abbreviations(string message)
+        // CHANGE LOL TO <Laughing out loud>
+        private string abbreviations(string sentence)
         {
-            MessageBox.Show(message);
-            foreach (string word in message.Split(' '))
+            foreach (string word in (sentence).Split(' '))
             {
                 foreach (string abr in abb)
                 {
@@ -176,21 +168,12 @@ namespace SE_cw1_maria
 
                         // Replace word for actual words
                         string words = "<" + all + ">";
-                        string newM = (message).Replace(word, words);
-                        return newM; 
-
-                        //sms.Text = newM;
-                        //message.body = newM;
-                        //label.Content = word;
-                        //label3.Content = message.body;
-                    }
-                    else
-                    {
-                        return message;
+                        string newM = (sentence).Replace(word, words);
+                        sentence = newM; 
                     }
                 }
             }
-            return message;
+            return (sentence);
         }
 
         private void outputFile(object message)

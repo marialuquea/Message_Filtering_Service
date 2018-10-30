@@ -8,10 +8,10 @@ namespace SE_cw1_maria
 {
     public class Sms : Message
     {
-        private int _sender;
+        private string _sender;
         private string _text;
 
-        public int Sender
+        public string Sender
         {
             get { return _sender; }
             set { _sender = value; }
