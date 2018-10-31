@@ -220,8 +220,21 @@ namespace SE_cw1_maria
 
                         // Replace word for actual words
                         string words = "<" + all + ">";
-                        string newM = (sentence).Replace(word, words);
-                        sentence = newM; 
+                        int index2 = sentence.IndexOf(word);
+                        try
+                        {
+                            string wordAfter = ((sentence).Split(' '))[index2 + 2];
+                            if (!wordAfter.Equals(words))
+                            {
+                                string newM = sentence.Insert((index2 + word.Length), words);
+                                sentence = newM;
+                            }
+                        }
+                        catch
+                        {
+                            // do nothing
+                        }
+                        
                     }
                 }
             }
