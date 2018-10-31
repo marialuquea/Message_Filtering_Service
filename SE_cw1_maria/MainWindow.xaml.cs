@@ -3,6 +3,7 @@ using System.Windows;
 using System.IO;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using System;
 
 namespace SE_cw1_maria
 {
@@ -15,6 +16,7 @@ namespace SE_cw1_maria
         List<string> abb = new List<string>();
         List<string> def = new List<string>();
         List<Sms> smsList = new List<Sms>(); 
+        List<string> quarantineList = new List<string>();
 
         public MainWindow()
         {
@@ -73,7 +75,7 @@ namespace SE_cw1_maria
             if (sms.body.Length > 0)
             {
                 int i = sms.body.IndexOf(" ") + 1;
-                string str = sms.body.Substring(i); // delete the fisrt word
+                string str = sms.body.Substring(i); // delete the first word
                 sms.Text = str;
                 label2.Content = sms.Text;
             }
@@ -93,44 +95,48 @@ namespace SE_cw1_maria
         {
 
             Email email = new Email();
+            Dictionary<string, string> SIR = new Dictionary<string, string>();
+
             //string sentence = "maria@gmail.com SIRhello 99-99-99 ,Theft, Hi";
             string sentence = message.body;
 
             email.id = message.id; // ID
             email.body = message.body; // BODY 
             email.Sender = sentence.Split(' ')[0]; //SENDER
-            
-            
-
-            Dictionary<string, string> SIR = new Dictionary<string, string>();
-
-            /*
-            // SENDER - email
-            email.Subject = message.body.Substring(0, (message.body).IndexOf(" ")); // get first word
-            label.Content = email.Subject;
-
-            // SUBJECT - 20 chars
-            int i = message.body.IndexOf(" ") + 1;
-            string str = message.body.Substring(i); // deletes first word (email sender)
-            email.Subject = str.Substring(0, 20); // gets the subject
-            label2.Content = email.Subject; // shows subject
-
-            // TEXT - max of 1028 chars
-            email.Text = str.Remove(0, 20); //deletes 20 characters which are the subject
-            label3.Content = email.Text; // shows text
-            */
             email.Subject = sentence.Split(' ')[1]; // SUBJECT
 
-             if ((email.Subject).StartsWith("SIR"))
+             if ((email.Subject).StartsWith("SIR")) // Significant Incident Report
             {
-                
                 email.Text =
                     sentence.Split(' ')[2] + ", " +
                     sentence.Split(',')[1] + ", " +
                     sentence.Split(',')[2];  // TEXT
+
                 SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
             }
+            else // Standard email message
+            {
+                //string sentence = "maria@gmail.com 12345678901234567890 hello this is the text";
 
+                // SUBJECT - 20 chars
+                int i = sentence.IndexOf(" ") + 1;
+                string str = sentence.Substring(i); // delete the sender
+                email.Subject = str.Substring(0, 20); // gets the subject
+                
+                // TEXT - max of 1028 chars
+                email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
+                
+            }
+
+            // URLs 
+            email.Text = url_search(email.Text);
+
+            // SHOW INFO
+            label.Content = "Sender: " + email.Sender;
+            label2.Content = "Subject: " + email.Subject;
+            label3.Content = "Text: " + email.Text;
+
+            // SAVE IN JSON FILE
             outputFile(email);
 
         }
@@ -184,6 +190,20 @@ namespace SE_cw1_maria
             tweet.Text = newM;
             label3.Content = tweet.Text;
             outputFile(tweet);
+        }
+
+        private string url_search(string sentence)
+        {
+            foreach (string word in sentence.Split(' '))
+            {
+                if (word.StartsWith("http:") || word.StartsWith("https:"))
+                {
+                    string newM = sentence.Replace(word, "<URL Quarantined>");
+                    sentence = newM;
+                    quarantineList.Add(word);
+                }
+            }
+            return sentence;
         }
         
         private string abbreviations(string sentence)
