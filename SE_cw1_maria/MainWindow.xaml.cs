@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.IO;
-using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System;
+using Data;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace SE_cw1_maria
 {
@@ -15,8 +17,11 @@ namespace SE_cw1_maria
 
         List<string> abb = new List<string>();
         List<string> def = new List<string>();
-        List<Sms> smsList = new List<Sms>(); 
         List<string> quarantineList = new List<string>();
+        Dictionary<string, string> SIR = new Dictionary<string, string>();
+        List<string> mentions = new List<string>();
+        Dictionary<string, int> hashtags = new Dictionary<string, int>();
+        List<object> data = new List<object>();
 
         public MainWindow()
         {
@@ -33,6 +38,28 @@ namespace SE_cw1_maria
                     def.Add(values[1]);
                 }
             }
+        }
+
+        // UPLOAD FILES
+        private void btnFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
+                string json = File.ReadAllText(openFileDialog.FileName);
+                data = JsonConvert.DeserializeObject<List<object>>(json);
+
+                foreach (var item in data)
+                {
+                    // if ID starts with S go to sms_process()
+                }
+            }
+            else
+            {
+                label.Content = "You did not choose a file idiot.";
+            }
+               
         }
 
         // CLICK BUTTON TO PROCESS MESSAGE
@@ -88,15 +115,17 @@ namespace SE_cw1_maria
             string newM = abbreviations(sms.Text);
             sms.Text = newM;
             label3.Content = sms.Text;
-            outputFile(sms);
+
+            // OUTPUT TO FILE
+            data.Add(sms);
+            JsonSave save = new JsonSave();
+            save.outputFile(data);
         }
 
         private void email_process(Message message)
         {
-
             Email email = new Email();
-            Dictionary<string, string> SIR = new Dictionary<string, string>();
-
+            
             //string sentence = "maria@gmail.com SIRhello 99-99-99 ,Theft, Hi";
             string sentence = message.body;
 
@@ -125,7 +154,6 @@ namespace SE_cw1_maria
                 
                 // TEXT - max of 1028 chars
                 email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
-                
             }
 
             // URLs 
@@ -137,8 +165,9 @@ namespace SE_cw1_maria
             label3.Content = "Text: " + email.Text;
 
             // SAVE IN JSON FILE
-            outputFile(email);
-
+            data.Add(email);
+            JsonSave save = new JsonSave();
+            save.outputFile(data);
         }
 
         private void tweet_process(Message message)
@@ -146,10 +175,7 @@ namespace SE_cw1_maria
             Tweet tweet = new Tweet();
             tweet.id = message.id;
             tweet.body = message.body;
-
-            List<string> mentions = new List<string>();
-            Dictionary<string, int> hashtags = new Dictionary<string, int>();
-
+            
             // SENDER - max 15 chars, starts with @
             tweet.Sender = message.body.Substring(0, (message.body).IndexOf(" "));
             label.Content = tweet.Sender;
@@ -189,7 +215,11 @@ namespace SE_cw1_maria
             string newM = abbreviations(tweet.Text);
             tweet.Text = newM;
             label3.Content = tweet.Text;
-            outputFile(tweet);
+
+            //Output file
+            data.Add(tweet);
+            JsonSave save = new JsonSave();
+            save.outputFile(data);
         }
 
         private string url_search(string sentence)
@@ -240,24 +270,7 @@ namespace SE_cw1_maria
             }
             return (sentence);
         }
-
-        private void outputFile(object message)
-        {
-            using (StreamWriter file = File.CreateText(@"../../../output.json"))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, message);
-            }
-        }
-
-        private void LoadJson()
-        {
-            using (StreamReader r = new StreamReader(@"../../../output.json"))
-            {
-                string json = r.ReadToEnd();
-                List<Email> emails = JsonConvert.DeserializeObject<List<Email>>(json); 
-            }
-        }
+        
 
     }
 }
