@@ -103,7 +103,7 @@ namespace SE_cw1_maria
             
 
             Dictionary<string, string> SIR = new Dictionary<string, string>();
-           
+
             /*
             // SENDER - email
             email.Subject = message.body.Substring(0, (message.body).IndexOf(" ")); // get first word
@@ -119,15 +119,16 @@ namespace SE_cw1_maria
             email.Text = str.Remove(0, 20); //deletes 20 characters which are the subject
             label3.Content = email.Text; // shows text
             */
+            email.Subject = sentence.Split(' ')[1]; // SUBJECT
 
-            if ((email.Subject).StartsWith("SIR"))
+             if ((email.Subject).StartsWith("SIR"))
             {
-                email.Subject = sentence.Split(' ')[1]; // SUBJECT
+                
                 email.Text =
                     sentence.Split(' ')[2] + ", " +
                     sentence.Split(',')[1] + ", " +
                     sentence.Split(',')[2];  // TEXT
-                SIR.Add((email.Text).Split(',')[1], (email.Text).Split(',')[2]);
+                SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
             }
 
             outputFile(email);
