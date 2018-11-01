@@ -193,14 +193,18 @@ namespace SE_cw1_maria
                         sentence.Split(' ')[2] + ", " +
                         sentence.Split(',')[1] + ", " +
                         sentence.Split(',')[2];  // TEXT
-                    try
+                    if (email.Text.Length < 1029)
                     {
-                        SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
-                        sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
+                        try
+                        {
+                            SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
+                            sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
+                        }
+                        catch { MessageBox.Show("Sort code already exists"); }
                     }
-                    catch
+                    else
                     {
-                        // item with same key has been added
+                        MessageBox.Show("Email can only be a max of 1028 characters.");
                     }
                 }
                 else // Standard email message
@@ -214,6 +218,10 @@ namespace SE_cw1_maria
 
                     // TEXT - max of 1028 chars
                     email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
+                    if (email.Text.Length > 1028)
+                    {
+                        MessageBox.Show("Email can only be a max of 1028 characters.");
+                    }
                 }
             }
             catch (Exception e)
