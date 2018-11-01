@@ -147,7 +147,7 @@ namespace SE_cw1_maria
             }
             
             // TEXT - max 140 characters
-            if (sms.body.Length > 0)
+            if (sms.body.Length > 0 && sms.body.Length < 141)
             {
                 int i = sms.body.IndexOf(" ") + 1;
                 string str = sms.body.Substring(i); // delete the first word
@@ -155,7 +155,7 @@ namespace SE_cw1_maria
             }
             else
             {
-                MessageBox.Show("Text in sms is empty.");
+                MessageBox.Show("SMS has to have between 0 and 140 characters.");
             }
 
             // ABBREVIATIONS
@@ -311,49 +311,57 @@ namespace SE_cw1_maria
         
         private string abbreviations(string sentence)
         {
-            foreach (string word in (sentence).Split(' '))
+            try
             {
-                foreach (string abr in abb)
+                foreach (string word in (sentence).Split(' '))
                 {
-                    if (word.Equals(abr))
+                    foreach (string abr in abb)
                     {
-                        // Find the definition
-                        int index = abb.IndexOf(abr);
-                        string all = def[index];
-
-                        // Replace word for actual words
-                        string words = word + " <" + all + ">";
-
-                        int index2 = sentence.IndexOf(word);
-
-                        char wordAfter;
-                        string wordAfter2;
-
-                        try // if it's not the last word
+                        if (word.Equals(abr))
                         {
-                            wordAfter = sentence[index2 + 1 + word.Length];
+                            // Find the definition
+                            int index = abb.IndexOf(abr);
+                            string all = def[index];
 
-                            wordAfter2 = wordAfter + "";
+                            // Replace word for actual words
+                            string words = word + " <" + all + ">";
 
-                            if (wordAfter2.Contains("<"))
+                            int index2 = sentence.IndexOf(word);
+
+                            char wordAfter;
+                            string wordAfter2;
+
+                            try // if it's not the last word
                             {
-                                break;
+                                wordAfter = sentence[index2 + 1 + word.Length];
+
+                                wordAfter2 = wordAfter + "";
+
+                                if (wordAfter2.Contains("<"))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    string newM = (sentence).Replace(word, words);
+                                    sentence = newM;
+                                }
                             }
-                            else
+                            catch // if it is the last word
                             {
                                 string newM = (sentence).Replace(word, words);
                                 sentence = newM;
                             }
                         }
-                        catch // if it is the last word
-                        {
-                            string newM = (sentence).Replace(word, words);
-                            sentence = newM;
-                        }
                     }
                 }
+                return (sentence);
             }
-            return (sentence);
+            catch
+            {
+                return sentence;
+            }
+            
         }
         
     }
