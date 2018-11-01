@@ -137,7 +137,14 @@ namespace SE_cw1_maria
             sms.body = message.body;
 
             // SENDER - int
-            sms.Sender = (sms.body).Substring(0, (sms.body).IndexOf(" ")); // first word (number)
+            try
+            {
+                sms.Sender = (sms.body).Substring(0, (sms.body).IndexOf(" ")); // first word (number)
+            }
+            catch (FormatException e)
+            {
+                MessageBox.Show(e.Message);
+            }
             
             // TEXT - max 140 characters
             if (sms.body.Length > 0)
