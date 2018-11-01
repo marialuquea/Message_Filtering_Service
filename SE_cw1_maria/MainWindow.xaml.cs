@@ -195,12 +195,8 @@ namespace SE_cw1_maria
                         sentence.Split(',')[2];  // TEXT
                     if (email.Text.Length < 1029)
                     {
-                        try
-                        {
-                            SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
-                            sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
-                        }
-                        catch { MessageBox.Show("Sort code already exists"); }
+                        SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
+                        sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
                     }
                     else
                     {
@@ -218,10 +214,26 @@ namespace SE_cw1_maria
 
                     // TEXT - max of 1028 chars
                     email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
-                    if (email.Text.Length > 1028)
-                    {
-                        MessageBox.Show("Email can only be a max of 1028 characters.");
-                    }
+                }
+
+                if (email.Text.Length > 1028)
+                {
+                    MessageBox.Show("Email can only be a max of 1028 characters.");
+                }
+                else
+                {
+                    // URLs 
+                    email.Text = url_search(email.Text);
+
+                    // SHOW INFO
+                    label.Text = "Sender: " + email.Sender;
+                    label2.Text = "Subject: " + email.Subject;
+                    label3.Text = "Text: " + email.Text;
+
+                    // SAVE IN JSON FILE
+                    data.Add(email);
+                    JsonSave save = new JsonSave();
+                    save.outputFile(data);
                 }
             }
             catch (Exception e)
@@ -229,18 +241,6 @@ namespace SE_cw1_maria
                 MessageBox.Show(e.Message);
             }
             
-            // URLs 
-            email.Text = url_search(email.Text);
-
-            // SHOW INFO
-            label.Text = "Sender: " + email.Sender;
-            label2.Text = "Subject: " + email.Subject;
-            label3.Text = "Text: " + email.Text;
-
-            // SAVE IN JSON FILE
-            data.Add(email);
-            JsonSave save = new JsonSave();
-            save.outputFile(data);
         }
 
         private void tweet_process(Message message)
