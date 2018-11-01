@@ -11,7 +11,6 @@
         <TextBox Name="txtBoxbody" HorizontalAlignment="Left" Height="73" Margin="10,38,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="193,116,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button x:Name="btnFile" Content="Upload File" HorizontalAlignment="Left" Margin="359,18,0,0" VerticalAlignment="Top" Width="75" Click="btnFile_Click"/>
-        <TextBox Name="txtEditor" HorizontalAlignment="Left" Height="266" Margin="301,43,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="198"/>
         <ListBox x:Name="sirList" HorizontalAlignment="Left" Height="122" Margin="518,43,0,0" VerticalAlignment="Top" Width="114"/>
         <ListBox Name="qList" HorizontalAlignment="Left" Height="122" Margin="647,43,0,0" VerticalAlignment="Top" Width="114"/>
         <Label Content="SIR List" HorizontalAlignment="Left" Margin="538,18,0,0" VerticalAlignment="Top" Width="76"/>
@@ -23,6 +22,6 @@
         <TextBox Name="label" HorizontalAlignment="Left" Height="23" Margin="10,165,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
         <TextBox Name="label2" HorizontalAlignment="Left" Height="23" Margin="10,193,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
         <TextBox Name="label3" HorizontalAlignment="Left" Height="65" Margin="10,221,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
-
+        <ListBox Name="lines" HorizontalAlignment="Left" Height="269" Margin="285,43,0,0" VerticalAlignment="Top" Width="216" MouseDoubleClick="lines_MouseDoubleClick"></ListBox>
     </Grid>
 </Window>

@@ -6,6 +6,8 @@ using Data;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Windows.Input;
+using System;
 
 namespace SE_cw1_maria
 {
@@ -45,13 +47,14 @@ namespace SE_cw1_maria
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
+                //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
                 string json = File.ReadAllText(openFileDialog.FileName);
-                data = JsonConvert.DeserializeObject<List<object>>(json);
 
-                foreach (var item in data)
+                //data = JsonConvert.DeserializeObject<List<object>>(json);
+
+                foreach (string line in File.ReadAllLines(openFileDialog.FileName))
                 {
-                    // if ID starts with S go to sms_process()
+                    lines.Items.Add(line);
                 }
             }
             else
@@ -59,6 +62,28 @@ namespace SE_cw1_maria
                 label.Text = "You did not choose a file idiot.";
             }
                
+        }
+
+        private void lines_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (lines.SelectedItem != null)
+            {
+                Message message = new Message();
+
+                string line = Convert.ToString(lines.SelectedItem);
+
+                message.id = line.Split(' ')[0].ToUpper();
+
+                int i = line.IndexOf(" ") + 1;
+                string str = line.Substring(i); // delete the first word
+                message.body = str;
+
+                if ((message.id)[0].Equals('S')) { sms_process(message); }
+                else if ((message.id)[0].Equals('E')) { email_process(message); }
+                else if ((message.id)[0].Equals('T')) { tweet_process(message); }
+                else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
+
+            }
         }
 
         // CLICK BUTTON TO PROCESS MESSAGE
