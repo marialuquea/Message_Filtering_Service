@@ -10,9 +10,6 @@
         <TextBox Name="txtBoxheader" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
         <TextBox Name="txtBoxbody" HorizontalAlignment="Left" Height="73" Margin="10,38,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="193,116,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Label Name="label" Content="" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Height="35" Width="286"/>
-        <Label x:Name="label2" Content="" HorizontalAlignment="Left" Margin="10,176,0,0" VerticalAlignment="Top" Height="33" Width="286"/>
-        <Label x:Name="label3" Content="" HorizontalAlignment="Left" Margin="10,214,0,0" VerticalAlignment="Top" Height="115" Width="286"/>
         <Button x:Name="btnFile" Content="Upload File" HorizontalAlignment="Left" Margin="359,18,0,0" VerticalAlignment="Top" Width="75" Click="btnFile_Click"/>
         <TextBox Name="txtEditor" HorizontalAlignment="Left" Height="266" Margin="301,43,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="198"/>
         <ListBox x:Name="sirList" HorizontalAlignment="Left" Height="122" Margin="518,43,0,0" VerticalAlignment="Top" Width="114"/>
@@ -20,9 +17,12 @@
         <Label Content="SIR List" HorizontalAlignment="Left" Margin="538,18,0,0" VerticalAlignment="Top" Width="76"/>
         <Label Content="Quarantine List" HorizontalAlignment="Left" Margin="661,20,0,0" VerticalAlignment="Top"/>
         <ListBox Name="trendList" HorizontalAlignment="Left" Height="122" Margin="518,190,0,0" VerticalAlignment="Top" Width="114"/>
-        <Label Content="Trending List" HorizontalAlignment="Left" Margin="538,165,0,0" VerticalAlignment="Top" Width="76"/>
+        <Label Content="Trending List" HorizontalAlignment="Left" Margin="538,165,0,0" VerticalAlignment="Top" Width="94"/>
         <ListBox Name="mentionList" HorizontalAlignment="Left" Height="122" Margin="647,190,0,0" VerticalAlignment="Top" Width="114"/>
-        <Label Content="Mentions List" HorizontalAlignment="Left" Margin="661,165,0,0" VerticalAlignment="Top" Width="76"/>
+        <Label Content="Mentions List" HorizontalAlignment="Left" Margin="661,165,0,0" VerticalAlignment="Top" Width="100"/>
+        <TextBox Name="label" HorizontalAlignment="Left" Height="23" Margin="10,165,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
+        <TextBox Name="label2" HorizontalAlignment="Left" Height="23" Margin="10,193,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
+        <TextBox Name="label3" HorizontalAlignment="Left" Height="65" Margin="10,221,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
 
     </Grid>
 </Window>

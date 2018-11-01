@@ -15,7 +15,6 @@ namespace SE_cw1_maria
     /// </summary>
     public partial class MainWindow : Window
     {
-
         List<string> abb = new List<string>();
         List<string> def = new List<string>();
         List<string> quarantineList = new List<string>();
@@ -58,7 +57,7 @@ namespace SE_cw1_maria
             }
             else
             {
-                label.Content = "You did not choose a file idiot.";
+                label.Text = "You did not choose a file idiot.";
             }
                
         }
@@ -121,9 +120,9 @@ namespace SE_cw1_maria
             save.outputFile(data);
 
             // SHOW RESULTS
-            label.Content = "ID: " + sms.id;
-            label2.Content = "Sender: " + sms.Sender;
-            label3.Content = "Text: " + sms.Text;
+            label.Text = "ID: " + sms.id;
+            label2.Text = "Sender: " + sms.Sender;
+            label3.Text = "Text: " + sms.Text;
         }
 
         private void email_process(Message message)
@@ -171,9 +170,9 @@ namespace SE_cw1_maria
             email.Text = url_search(email.Text);
 
             // SHOW INFO
-            label.Content = "Sender: " + email.Sender;
-            label2.Content = "Subject: " + email.Subject;
-            label3.Content = "Text: " + email.Text;
+            label.Text = "Sender: " + email.Sender;
+            label2.Text = "Subject: " + email.Subject;
+            label3.Text = "Text: " + email.Text;
 
             // SAVE IN JSON FILE
             data.Add(email);
@@ -231,9 +230,9 @@ namespace SE_cw1_maria
             save.outputFile(data);
 
             // SHOW RESULTS
-            label.Content = "ID: " + tweet.id;
-            label2.Content = "Sender: " + tweet.Sender;
-            label3.Content = "Text: " + tweet.Text;
+            label.Text = "ID: " + tweet.id;
+            label2.Text = "Sender: " + tweet.Sender;
+            label3.Text = "Text: " + tweet.Text;
 
             // TRENDING LIST
             trendList.Items.Clear();
@@ -264,6 +263,10 @@ namespace SE_cw1_maria
             {
                 foreach (string abr in abb)
                 {
+                    if (abr.Length < 1)
+                    {
+                        continue;
+                    }
                     if (word.Equals(abr))
                     {
                         // Find the definition
@@ -274,20 +277,31 @@ namespace SE_cw1_maria
                         string words = word + " <" + all + ">";
 
                         int index2 = sentence.IndexOf(word);
-                       
-                        char wordAfter = sentence[index2 + 1 + word.Length];
 
-                        string wordAfter2 = wordAfter + "";
-                            
-                       if (wordAfter2.Contains("<"))
-                       {
-                            break;
-                       }
-                       else
-                       {
+                        char wordAfter;
+                        string wordAfter2;
+
+                        try // if it's not the last word
+                        {
+                            wordAfter = sentence[index2 + 1 + word.Length];
+
+                            wordAfter2 = wordAfter + "";
+
+                            if (wordAfter2.Contains("<"))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                string newM = (sentence).Replace(word, words);
+                                sentence = newM;
+                            }
+                        }
+                        catch // if it is the last word
+                        {
                             string newM = (sentence).Replace(word, words);
                             sentence = newM;
-                       }
+                        }
                     }
                 }
             }
