@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.IO;
-using System.Text.RegularExpressions;
-using System;
 using Data;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace SE_cw1_maria
 {
@@ -202,8 +201,11 @@ namespace SE_cw1_maria
                 // If there is a mention
                 if (word.StartsWith("@"))
                 {
-                    mentions.Add(word);
-                    mentionList.Items.Add(word);
+                    if (!mentions.Contains(word))
+                    {
+                        mentions.Add(word);
+                        mentionList.Items.Add(word);
+                    }
                 }
 
                 // If there is a hashtag
@@ -236,7 +238,8 @@ namespace SE_cw1_maria
 
             // TRENDING LIST
             trendList.Items.Clear();
-            foreach (var item in hashtags)
+            var sortedDict = hashtags.OrderBy(x => x.Value);
+            foreach (var item in sortedDict.OrderByDescending(key => key.Value))
             {
                 trendList.Items.Add(item);
             }
@@ -263,10 +266,6 @@ namespace SE_cw1_maria
             {
                 foreach (string abr in abb)
                 {
-                    if (abr.Length < 1)
-                    {
-                        continue;
-                    }
                     if (word.Equals(abr))
                     {
                         // Find the definition
