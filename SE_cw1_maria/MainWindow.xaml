@@ -5,15 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SE_cw1_maria"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="370" Width="800">
     <Grid>
         <TextBox Name="txtBoxheader" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
         <TextBox Name="txtBoxbody" HorizontalAlignment="Left" Height="73" Margin="10,38,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="258"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="193,116,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Label Name="label" Content="" HorizontalAlignment="Left" Margin="50,154,0,0" VerticalAlignment="Top" Height="35" Width="415" Grid.ColumnSpan="2"/>
-        <Label x:Name="label2" Content="" HorizontalAlignment="Left" Margin="50,194,0,0" VerticalAlignment="Top" Height="77" Width="415" Grid.ColumnSpan="2"/>
-        <Label x:Name="label3" Content="" HorizontalAlignment="Left" Margin="50,276,0,0" VerticalAlignment="Top" Height="35" Width="415" Grid.ColumnSpan="2"/>
-        <Button x:Name="btnFile" Content="Upload File" HorizontalAlignment="Left" Margin="433,170,0,0" VerticalAlignment="Top" Width="75" Click="btnFile_Click"/>
-        <TextBox Name="txtEditor" HorizontalAlignment="Left" Height="151" Margin="310,14,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="198"/>
+        <Label Name="label" Content="" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Height="35" Width="286"/>
+        <Label x:Name="label2" Content="" HorizontalAlignment="Left" Margin="10,176,0,0" VerticalAlignment="Top" Height="33" Width="286"/>
+        <Label x:Name="label3" Content="" HorizontalAlignment="Left" Margin="10,214,0,0" VerticalAlignment="Top" Height="115" Width="286"/>
+        <Button x:Name="btnFile" Content="Upload File" HorizontalAlignment="Left" Margin="359,18,0,0" VerticalAlignment="Top" Width="75" Click="btnFile_Click"/>
+        <TextBox Name="txtEditor" HorizontalAlignment="Left" Height="266" Margin="301,43,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="198"/>
+        <ListBox x:Name="sirList" HorizontalAlignment="Left" Height="122" Margin="518,43,0,0" VerticalAlignment="Top" Width="114"/>
+        <ListBox Name="qList" HorizontalAlignment="Left" Height="122" Margin="647,43,0,0" VerticalAlignment="Top" Width="114"/>
+        <Label Content="SIR List" HorizontalAlignment="Left" Margin="538,18,0,0" VerticalAlignment="Top" Width="76"/>
+        <Label Content="Quarantine List" HorizontalAlignment="Left" Margin="661,20,0,0" VerticalAlignment="Top"/>
+        <ListBox Name="trendList" HorizontalAlignment="Left" Height="122" Margin="518,190,0,0" VerticalAlignment="Top" Width="114"/>
+        <Label Content="Trending List" HorizontalAlignment="Left" Margin="538,165,0,0" VerticalAlignment="Top" Width="76"/>
+        <ListBox Name="mentionList" HorizontalAlignment="Left" Height="122" Margin="647,190,0,0" VerticalAlignment="Top" Width="114"/>
+        <Label Content="Mentions List" HorizontalAlignment="Left" Margin="661,165,0,0" VerticalAlignment="Top" Width="76"/>
+
     </Grid>
 </Window>

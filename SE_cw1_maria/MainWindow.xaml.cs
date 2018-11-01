@@ -98,15 +98,13 @@ namespace SE_cw1_maria
 
             // SENDER - int
             sms.Sender = (sms.body).Substring(0, (sms.body).IndexOf(" ")); // first word (number)
-            label.Content = sms.Sender;
-
+            
             // TEXT - max 140 characters
             if (sms.body.Length > 0)
             {
                 int i = sms.body.IndexOf(" ") + 1;
                 string str = sms.body.Substring(i); // delete the first word
                 sms.Text = str;
-                label2.Content = sms.Text;
             }
             else
             {
@@ -116,12 +114,16 @@ namespace SE_cw1_maria
             // ABBREVIATIONS
             string newM = abbreviations(sms.Text);
             sms.Text = newM;
-            label3.Content = sms.Text;
 
             // OUTPUT TO FILE
             data.Add(sms);
             JsonSave save = new JsonSave();
             save.outputFile(data);
+
+            // SHOW RESULTS
+            label.Content = "ID: " + sms.id;
+            label2.Content = "Sender: " + sms.Sender;
+            label3.Content = "Text: " + sms.Text;
         }
 
         private void email_process(Message message)
@@ -142,8 +144,15 @@ namespace SE_cw1_maria
                     sentence.Split(' ')[2] + ", " +
                     sentence.Split(',')[1] + ", " +
                     sentence.Split(',')[2];  // TEXT
-
-                SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
+                try
+                {
+                    SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
+                    sirList.Items.Add((email.Text).Split(',')[0] +", "+ (email.Text).Split(',')[1]);
+                }
+                catch
+                {
+                    // item with same key has been added
+                }
             }
             else // Standard email message
             {
@@ -180,13 +189,11 @@ namespace SE_cw1_maria
             
             // SENDER - max 15 chars, starts with @
             tweet.Sender = message.body.Substring(0, (message.body).IndexOf(" "));
-            label.Content = tweet.Sender;
-
+            
             // TEXT - max 140 chars
             int i = message.body.IndexOf(" ") + 1;
             string str = message.body.Substring(i);
             tweet.Text = str;
-            label2.Content = tweet.Text;
 
             // SEARCH THROUGH WORDS 
             string sentence = tweet.Text;
@@ -197,6 +204,7 @@ namespace SE_cw1_maria
                 if (word.StartsWith("@"))
                 {
                     mentions.Add(word);
+                    mentionList.Items.Add(word);
                 }
 
                 // If there is a hashtag
@@ -216,12 +224,23 @@ namespace SE_cw1_maria
             // ABBREVIATIONS
             string newM = abbreviations(tweet.Text);
             tweet.Text = newM;
-            label3.Content = tweet.Text;
 
             //Output file
             data.Add(tweet);
             JsonSave save = new JsonSave();
             save.outputFile(data);
+
+            // SHOW RESULTS
+            label.Content = "ID: " + tweet.id;
+            label2.Content = "Sender: " + tweet.Sender;
+            label3.Content = "Text: " + tweet.Text;
+
+            // TRENDING LIST
+            trendList.Items.Clear();
+            foreach (var item in hashtags)
+            {
+                trendList.Items.Add(item);
+            }
         }
 
         private string url_search(string sentence)
@@ -233,6 +252,7 @@ namespace SE_cw1_maria
                     string newM = sentence.Replace(word, "<URL Quarantined>");
                     sentence = newM;
                     quarantineList.Add(word);
+                    qList.Items.Add(word);
                 }
             }
             return sentence;
