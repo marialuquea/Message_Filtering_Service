@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Windows;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -90,6 +91,7 @@ namespace SE_cw1_maria
         
         private void sms_process(Message message)
         {
+
             Sms sms = new Sms();
             sms.id = message.id;
             sms.body = message.body;
@@ -249,16 +251,28 @@ namespace SE_cw1_maria
                         string all = def[index];
 
                         // Replace word for actual words
-                        string words = word + "<" + all + ">";
-                        string newM = (sentence).Replace(word, words);
-                        sentence = newM;
-                        break;
+                        string words = word + " <" + all + ">";
+
+                        int index2 = sentence.IndexOf(word);
+                       
+                        char wordAfter = sentence[index2 + 1 + word.Length];
+
+                        string wordAfter2 = wordAfter + "";
+                            
+                       if (wordAfter2.Contains("<"))
+                       {
+                            break;
+                       }
+                       else
+                       {
+                            string newM = (sentence).Replace(word, words);
+                            sentence = newM;
+                       }
                     }
                 }
             }
             return (sentence);
         }
         
-
     }
 }
