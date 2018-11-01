@@ -41,7 +41,7 @@ namespace SE_cw1_maria
             }
         }
 
-        // UPLOAD FILES
+        // UPLOAD FILE TO LISTBOX
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -64,6 +64,7 @@ namespace SE_cw1_maria
                
         }
 
+        // READ LINE OF FILE
         private void lines_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (lines.SelectedItem != null)
@@ -72,17 +73,25 @@ namespace SE_cw1_maria
 
                 string line = Convert.ToString(lines.SelectedItem);
 
-                message.id = line.Split(' ')[0].ToUpper();
+                message.id = line.Split(' ')[0].ToUpper(); // MESSAGE ID
+                
+                string idNumber = message.id.Remove(0, 1); // remove first letter (S, E or T)
+                if (((message.id).Length == 10) && (int.TryParse(idNumber, out int k)))
+                { // if the message header has first a letter and then 9 numbers:
+                    int i = line.IndexOf(" ") + 1;
+                    string str = line.Substring(i); // delete the first word
+                    message.body = str;
 
-                int i = line.IndexOf(" ") + 1;
-                string str = line.Substring(i); // delete the first word
-                message.body = str;
-
-                if ((message.id)[0].Equals('S')) { sms_process(message); }
-                else if ((message.id)[0].Equals('E')) { email_process(message); }
-                else if ((message.id)[0].Equals('T')) { tweet_process(message); }
-                else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
-
+                    if ((message.id)[0].Equals('S')) { sms_process(message); }
+                    else if ((message.id)[0].Equals('E')) { email_process(message); }
+                    else if ((message.id)[0].Equals('T')) { tweet_process(message); }
+                    else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
+                }
+                else
+                {
+                    MessageBox.Show("ID is not written in the correct format ('S','E' or 'T' followed by 9 numeric characters)");
+                }
+                
             }
         }
 
@@ -99,12 +108,20 @@ namespace SE_cw1_maria
 
                 message.id = header;
                 message.body = body;
-                
-                // HEADER OPTIONS - S, E or T
-                if (header[0].Equals('S')) { sms_process(message); }
-                else if (header[0].Equals('E')) { email_process(message); }
-                else if (header[0].Equals('T')) { tweet_process(message); }
-                else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
+
+                string idNumber = message.id.Remove(0, 1); // remove first letter (S, E or T)
+                if (((message.id).Length == 10) && (int.TryParse(idNumber, out int k)))
+                {
+                    // HEADER OPTIONS - S, E or T
+                    if (header[0].Equals('S')) { sms_process(message); }
+                    else if (header[0].Equals('E')) { email_process(message); }
+                    else if (header[0].Equals('T')) { tweet_process(message); }
+                    else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
+                }
+                else
+                {
+                    MessageBox.Show("ID is not written in the correct format ('S','E' or 'T' followed by 9 numeric characters)");
+                }
             }
             else
             {
