@@ -15,7 +15,18 @@ namespace SE_cw1_maria
         public string Sender
         {
             get { return _sender; }
-            set { _sender = value; }
+            set
+            {
+                try
+                {
+                    var addr = new System.Net.Mail.MailAddress(value);
+                    _sender = value;
+                }
+                catch
+                {
+                    throw new Exception("Email not in valid format.");
+                }
+            }
         }
 
         public string Subject
@@ -29,5 +40,6 @@ namespace SE_cw1_maria
             get { return _text; }
             set { _text = value; }
         }
+
     }
 }

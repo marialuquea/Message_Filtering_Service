@@ -179,41 +179,48 @@ namespace SE_cw1_maria
             
             //string sentence = "maria@gmail.com SIRhello 99-99-99 ,Theft, Hi";
             string sentence = message.body;
-
-            email.id = message.id; // ID
-            email.body = message.body; // BODY 
-            email.Sender = sentence.Split(' ')[0]; //SENDER
-            email.Subject = sentence.Split(' ')[1]; // SUBJECT
-
-             if ((email.Subject).StartsWith("SIR")) // Significant Incident Report
+            
+            try
             {
-                email.Text =
-                    sentence.Split(' ')[2] + ", " +
-                    sentence.Split(',')[1] + ", " +
-                    sentence.Split(',')[2];  // TEXT
-                try
+                email.id = message.id; // ID
+                email.body = message.body; // BODY 
+                email.Sender = sentence.Split(' ')[0]; //SENDER
+                email.Subject = sentence.Split(' ')[1]; // SUBJECT
+
+                if ((email.Subject).StartsWith("SIR")) // Significant Incident Report
                 {
-                    SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
-                    sirList.Items.Add((email.Text).Split(',')[0] +", "+ (email.Text).Split(',')[1]);
+                    email.Text =
+                        sentence.Split(' ')[2] + ", " +
+                        sentence.Split(',')[1] + ", " +
+                        sentence.Split(',')[2];  // TEXT
+                    try
+                    {
+                        SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
+                        sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
+                    }
+                    catch
+                    {
+                        // item with same key has been added
+                    }
                 }
-                catch
+                else // Standard email message
                 {
-                    // item with same key has been added
+                    //string sentence = "maria@gmail.com 12345678901234567890 hello this is the text";
+
+                    // SUBJECT - 20 chars
+                    int i = sentence.IndexOf(" ") + 1;
+                    string str = sentence.Substring(i); // delete the sender
+                    email.Subject = str.Substring(0, 20); // gets the subject
+
+                    // TEXT - max of 1028 chars
+                    email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
                 }
             }
-            else // Standard email message
+            catch (Exception e)
             {
-                //string sentence = "maria@gmail.com 12345678901234567890 hello this is the text";
-
-                // SUBJECT - 20 chars
-                int i = sentence.IndexOf(" ") + 1;
-                string str = sentence.Substring(i); // delete the sender
-                email.Subject = str.Substring(0, 20); // gets the subject
-                
-                // TEXT - max of 1028 chars
-                email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
+                MessageBox.Show(e.Message);
             }
-
+            
             // URLs 
             email.Text = url_search(email.Text);
 
@@ -296,17 +303,24 @@ namespace SE_cw1_maria
 
         private string url_search(string sentence)
         {
-            foreach (string word in sentence.Split(' '))
+            try
             {
-                if (word.StartsWith("http:") || word.StartsWith("https:"))
+                foreach (string word in sentence.Split(' '))
                 {
-                    string newM = sentence.Replace(word, "<URL Quarantined>");
-                    sentence = newM;
-                    quarantineList.Add(word);
-                    qList.Items.Add(word);
+                    if (word.StartsWith("http:") || word.StartsWith("https:"))
+                    {
+                        string newM = sentence.Replace(word, "<URL Quarantined>");
+                        sentence = newM;
+                        quarantineList.Add(word);
+                        qList.Items.Add(word);
+                    }
                 }
+                return sentence;
             }
-            return sentence;
+            catch
+            {
+                return sentence;
+            }
         }
         
         private string abbreviations(string sentence)
