@@ -195,13 +195,8 @@ namespace SE_cw1_maria
                 {
                     //string sentence = "maria@gmail.com 12345678901234567890 hello this is the text";
 
-                    // SUBJECT - max 20 chars
-                    int i = sentence.IndexOf(",") + 1;
-                    string str = sentence.Substring(i); // delete the sender
-                    email.Subject = str.Substring(0, 20); // gets the subject
-
                     // TEXT - max of 1028 chars
-                    email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
+                    email.Text = (email.body).Split(',')[2];
                 }
 
                 // URLs 
