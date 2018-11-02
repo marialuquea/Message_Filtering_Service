@@ -17,18 +17,5 @@ namespace Data
                 serializer.Serialize(file, message);
             }
         }
-
-        public List<object> loadFile()
-        {
-            List<object> objects = new List<object>();
-
-            using (StreamReader r = new StreamReader(@"../../../output.json"))
-            {
-                string json = r.ReadToEnd();
-                objects = JsonConvert.DeserializeObject<List<object>>(json);
-            }
-
-            return objects;
-        }
     }
 }
