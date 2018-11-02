@@ -245,68 +245,76 @@ namespace SE_cw1_maria
 
         private void tweet_process(Message message)
         {
-            Tweet tweet = new Tweet();
-            tweet.id = message.id;
-            tweet.body = message.body;
-            
-            // SENDER - max 15 chars, starts with @
-            tweet.Sender = message.body.Substring(0, (message.body).IndexOf(" "));
-            
-            // TEXT - max 140 chars
-            int i = message.body.IndexOf(" ") + 1;
-            string str = message.body.Substring(i);
-            tweet.Text = str;
-
-            // SEARCH THROUGH WORDS 
-            string sentence = tweet.Text;
-
-            foreach (string word in (sentence).Split(' '))
+            try
             {
-                // If there is a mention
-                if (word.StartsWith("@"))
+                Tweet tweet = new Tweet();
+                tweet.id = message.id;
+                tweet.body = message.body;
+
+                // SENDER - max 15 chars, starts with @
+                tweet.Sender = message.body.Substring(0, (message.body).IndexOf(" "));
+
+                // TEXT - max 140 chars
+                int i = message.body.IndexOf(" ") + 1;
+                string str = message.body.Substring(i);
+                tweet.Text = str;
+
+                // SEARCH THROUGH WORDS 
+                string sentence = tweet.Text;
+
+                foreach (string word in (sentence).Split(' '))
                 {
-                    if (!mentions.Contains(word))
+                    // If there is a mention
+                    if (word.StartsWith("@"))
                     {
-                        mentions.Add(word);
-                        mentionList.Items.Add(word);
+                        if (!mentions.Contains(word))
+                        {
+                            mentions.Add(word);
+                            mentionList.Items.Add(word);
+                        }
+                    }
+
+                    // If there is a hashtag
+                    if (word.StartsWith("#"))
+                    {
+                        if (hashtags.ContainsKey(word))
+                        {
+                            hashtags[word] += 1;
+                        }
+                        else
+                        {
+                            hashtags.Add(word, 1);
+                        }
                     }
                 }
 
-                // If there is a hashtag
-                if (word.StartsWith("#"))
+                // ABBREVIATIONS
+                string newM = abbreviations(tweet.Text);
+                tweet.Text = newM;
+
+                //Output file
+                data.Add(tweet);
+                JsonSave save = new JsonSave();
+                save.outputFile(data);
+
+                // SHOW RESULTS
+                label.Text = "ID: " + tweet.id;
+                label2.Text = "Sender: " + tweet.Sender;
+                label3.Text = "Text: " + tweet.Text;
+
+                // TRENDING LIST
+                trendList.Items.Clear();
+                var sortedDict = hashtags.OrderBy(x => x.Value);
+                foreach (var item in sortedDict.OrderByDescending(key => key.Value))
                 {
-                    if (hashtags.ContainsKey(word))
-                    {
-                        hashtags[word] += 1;
-                    }
-                    else
-                    {
-                        hashtags.Add(word, 1);
-                    }
+                    trendList.Items.Add(item);
                 }
             }
-
-            // ABBREVIATIONS
-            string newM = abbreviations(tweet.Text);
-            tweet.Text = newM;
-
-            //Output file
-            data.Add(tweet);
-            JsonSave save = new JsonSave();
-            save.outputFile(data);
-
-            // SHOW RESULTS
-            label.Text = "ID: " + tweet.id;
-            label2.Text = "Sender: " + tweet.Sender;
-            label3.Text = "Text: " + tweet.Text;
-
-            // TRENDING LIST
-            trendList.Items.Clear();
-            var sortedDict = hashtags.OrderBy(x => x.Value);
-            foreach (var item in sortedDict.OrderByDescending(key => key.Value))
+            catch (ArgumentException e)
             {
-                trendList.Items.Add(item);
+                MessageBox.Show(e.Message);
             }
+            
         }
 
         private string url_search(string sentence)

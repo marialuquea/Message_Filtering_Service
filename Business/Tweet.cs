@@ -14,13 +14,25 @@ namespace SE_cw1_maria
         public string Sender
         {
             get { return _sender; }
-            set { _sender = value; }
+            set
+            {
+                if (value.StartsWith("@") && (value.Length < 16))
+                    _sender = value;
+                else
+                    throw new ArgumentException("Sender must start with @ and have a max of 15 characters.");
+            }
         }
 
         public string Text
         {
             get { return _text; }
-            set { _text = value; }
+            set
+            {
+                if (value.Length < 141)
+                    _text = value;
+                else
+                    throw new ArgumentException("Tweet text can only be max 140 characters long.");
+            }
         }
 
     }
