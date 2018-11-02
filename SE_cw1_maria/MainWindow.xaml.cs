@@ -69,15 +69,16 @@ namespace SE_cw1_maria
         {
             if (lines.SelectedItem != null)
             {
+
                 Message message = new Message();
 
-                string line = Convert.ToString(lines.SelectedItem);
+                try
+                {
+                    string line = Convert.ToString(lines.SelectedItem);
 
-                message.id = line.Split(' ')[0].ToUpper(); // MESSAGE ID
-                
-                string idNumber = message.id.Remove(0, 1); // remove first letter (S, E or T)
-                if (((message.id).Length == 10) && (int.TryParse(idNumber, out int k)))
-                { // if the message header has first a letter and then 9 numbers:
+                    message.id = line.Split(' ')[0].ToUpper(); // MESSAGE ID
+                    
+                    // if the message header has first a letter and then 9 numbers:
                     int i = line.IndexOf(" ") + 1;
                     string str = line.Substring(i); // delete the first word
                     message.body = str;
@@ -86,10 +87,11 @@ namespace SE_cw1_maria
                     else if ((message.id)[0].Equals('E')) { email_process(message); }
                     else if ((message.id)[0].Equals('T')) { tweet_process(message); }
                     else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
+                    
                 }
-                else
+                catch (ArgumentException a)
                 {
-                    MessageBox.Show("ID is not written in the correct format ('S','E' or 'T' followed by 9 numeric characters)");
+                    MessageBox.Show(a.Message);
                 }
                 
             }
@@ -105,22 +107,20 @@ namespace SE_cw1_maria
             {
                 string header = txtBoxheader.Text.ToUpper();
                 string body = txtBoxbody.Text;
-
-                message.id = header;
-                message.body = body;
-
-                string idNumber = message.id.Remove(0, 1); // remove first letter (S, E or T)
-                if (((message.id).Length == 10) && (int.TryParse(idNumber, out int k)))
+                
+                try
                 {
+                    message.id = header;
+                    message.body = body;
+
                     // HEADER OPTIONS - S, E or T
                     if (header[0].Equals('S')) { sms_process(message); }
                     else if (header[0].Equals('E')) { email_process(message); }
                     else if (header[0].Equals('T')) { tweet_process(message); }
-                    else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
                 }
-                else
+                catch (ArgumentException ee)
                 {
-                    MessageBox.Show("ID is not written in the correct format ('S','E' or 'T' followed by 9 numeric characters)");
+                    MessageBox.Show(ee.Message);
                 }
             }
             else
@@ -131,53 +131,44 @@ namespace SE_cw1_maria
         
         private void sms_process(Message message)
         {
-
             Sms sms = new Sms();
-            sms.id = message.id;
-            sms.body = message.body;
 
             // SENDER - int
             try
             {
+                sms.id = message.id;
+                sms.body = message.body;
                 sms.Sender = (sms.body).Substring(0, (sms.body).IndexOf(" ")); // first word (number)
+                int i = sms.body.IndexOf(" ") + 1;
+                string str = sms.body.Substring(i); // delete the first word
+                sms.Text = str;
+
+                // ABBREVIATIONS
+                string newM = abbreviations(sms.Text);
+                sms.Text = newM;
+
+                // OUTPUT TO FILE
+                data.Add(sms);
+                JsonSave save = new JsonSave();
+                save.outputFile(data);
+
+                // SHOW RESULTS
+                label.Text = "ID: " + sms.id;
+                label2.Text = "Sender: " + sms.Sender;
+                label3.Text = "Text: " + sms.Text;
             }
-            catch (FormatException e)
+            catch (ArgumentException e)
             {
                 MessageBox.Show(e.Message);
             }
             
-            // TEXT - max 140 characters
-            if (sms.body.Length > 0 && sms.body.Length < 141)
-            {
-                int i = sms.body.IndexOf(" ") + 1;
-                string str = sms.body.Substring(i); // delete the first word
-                sms.Text = str;
-            }
-            else
-            {
-                MessageBox.Show("SMS has to have between 0 and 140 characters.");
-            }
-
-            // ABBREVIATIONS
-            string newM = abbreviations(sms.Text);
-            sms.Text = newM;
-
-            // OUTPUT TO FILE
-            data.Add(sms);
-            JsonSave save = new JsonSave();
-            save.outputFile(data);
-
-            // SHOW RESULTS
-            label.Text = "ID: " + sms.id;
-            label2.Text = "Sender: " + sms.Sender;
-            label3.Text = "Text: " + sms.Text;
         }
 
         private void email_process(Message message)
         {
             Email email = new Email();
             
-            //string sentence = "maria@gmail.com SIRhello 99-99-99 ,Theft, Hi";
+            //string sentence = "maria@gmail.com %SIRhello% 99-99-99 ,Theft, Hi";
             string sentence = message.body;
             
             try
@@ -185,25 +176,22 @@ namespace SE_cw1_maria
                 email.id = message.id; // ID
                 email.body = message.body; // BODY 
                 email.Sender = sentence.Split(' ')[0]; //SENDER
-                email.Subject = sentence.Split(' ')[1]; // SUBJECT
+                email.Subject = sentence.Split('%')[1]; // SUBJECT
 
-                if ((email.Subject).StartsWith("SIR")) // Significant Incident Report
+                // SIGNIFICANT INCIDENT REPORT
+                if ((email.Subject).StartsWith("SIR")) 
                 {
                     email.Text =
                         sentence.Split(' ')[2] + ", " +
                         sentence.Split(',')[1] + ", " +
-                        sentence.Split(',')[2];  // TEXT
-                    if (email.Text.Length < 1029)
-                    {
-                        SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
-                        sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Email can only be a max of 1028 characters.");
-                    }
+                        sentence.Split(',')[2];  
+
+                    SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
+                    sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
+                    
                 }
-                else // Standard email message
+                // STANDARD EMAIL MESSAGE
+                else
                 {
                     //string sentence = "maria@gmail.com 12345678901234567890 hello this is the text";
 
@@ -216,27 +204,20 @@ namespace SE_cw1_maria
                     email.Text = (str).Remove(0, 20); //deletes 20 characters which are the subject
                 }
 
-                if (email.Text.Length > 1028)
-                {
-                    MessageBox.Show("Email can only be a max of 1028 characters.");
-                }
-                else
-                {
-                    // URLs 
-                    email.Text = url_search(email.Text);
-
-                    // SHOW INFO
-                    label.Text = "Sender: " + email.Sender;
-                    label2.Text = "Subject: " + email.Subject;
-                    label3.Text = "Text: " + email.Text;
-
-                    // SAVE IN JSON FILE
-                    data.Add(email);
-                    JsonSave save = new JsonSave();
-                    save.outputFile(data);
-                }
+                // URLs 
+                email.Text = url_search(email.Text);
+                
+                // SHOW INFO
+                label.Text = "Sender: " + email.Sender;
+                label2.Text = "Subject: " + email.Subject;
+                label3.Text = "Text: " + email.Text;
+                
+                // SAVE IN JSON FILE
+                data.Add(email);
+                JsonSave save = new JsonSave();
+                save.outputFile(data);
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 MessageBox.Show(e.Message);
             }

@@ -14,7 +14,18 @@ namespace SE_cw1_maria
         public string id
         {
             get { return _id; }
-            set { _id = value; }
+            set
+            {
+                // if the id is 10 chars long (1 letter and 9 numbers) and the other 9 are numbers
+                if((value.Length == 10) && (int.TryParse((value.Remove(0, 1)), out int k)))
+                {
+                    _id = value;
+                }
+                else
+                {
+                    throw new ArgumentException("ID is not written in the correct format: 'S','E' or 'T' followed by 9 numeric characters");
+                }
+            }
         }
 
         public string body

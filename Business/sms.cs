@@ -15,10 +15,9 @@ namespace SE_cw1_maria
             set
             {
                 if (!Regex.IsMatch(value, _regex))
-                {
-                    throw new FormatException("Telephone number is in wrong format");
-                }
-                _sender = value;
+                    throw new ArgumentException("Telephone number is in wrong format");
+                else 
+                    _sender = value;
             }
         
         }
@@ -26,7 +25,13 @@ namespace SE_cw1_maria
         public string Text
         {
             get { return _text; }
-            set { _text = value; }
+            set
+            {
+                if ((value.Length > 0) && (value.Length < 141))
+                    _text = value;
+                else
+                    throw new ArgumentException("SMS has to have between 0 and 140 characters.");
+            }
         }
     }
 }
