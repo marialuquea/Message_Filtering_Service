@@ -168,7 +168,7 @@ namespace SE_cw1_maria
         {
             Email email = new Email();
             
-            //string sentence = "maria@gmail.com %SIRhello% 99-99-99 ,Theft, Hi";
+            //string sentence = "maria@gmail.com ,SIRhello, 99-99-99 ,Theft, Hi";
             string sentence = message.body;
             
             try
@@ -176,15 +176,15 @@ namespace SE_cw1_maria
                 email.id = message.id; // ID
                 email.body = message.body; // BODY 
                 email.Sender = sentence.Split(' ')[0]; //SENDER
-                email.Subject = sentence.Split('%')[1]; // SUBJECT
+                email.Subject = sentence.Split(',')[1]; // SUBJECT
 
                 // SIGNIFICANT INCIDENT REPORT
                 if ((email.Subject).StartsWith("SIR")) 
                 {
                     email.Text =
-                        sentence.Split(' ')[2] + ", " +
-                        sentence.Split(',')[1] + ", " +
-                        sentence.Split(',')[2];  
+                        sentence.Split(',')[2] + ", " +
+                        sentence.Split(',')[3] + ", " +
+                        sentence.Split(',')[4];  
 
                     SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
                     sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
@@ -195,8 +195,8 @@ namespace SE_cw1_maria
                 {
                     //string sentence = "maria@gmail.com 12345678901234567890 hello this is the text";
 
-                    // SUBJECT - 20 chars
-                    int i = sentence.IndexOf(" ") + 1;
+                    // SUBJECT - max 20 chars
+                    int i = sentence.IndexOf(",") + 1;
                     string str = sentence.Substring(i); // delete the sender
                     email.Subject = str.Substring(0, 20); // gets the subject
 
