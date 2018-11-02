@@ -24,7 +24,7 @@ namespace SE_cw1_maria
                 }
                 catch
                 {
-                    throw new ArgumentException("Email not in valid format.");
+                    throw new Exception("Email not in valid format.");
                 }
             }
         }
@@ -37,7 +37,7 @@ namespace SE_cw1_maria
                 if (value.Length < 21)
                     _subject = value;
                 else
-                    throw new ArgumentException("Subject can be a max of 20 characters.");
+                    throw new Exception("Subject can be a max of 20 characters.");
             }
         }
 
@@ -49,7 +49,7 @@ namespace SE_cw1_maria
                 if (value.Length < 1029)
                     _text = value;
                 else
-                    throw new ArgumentException("Text can be a maximum of 1028 characters.");
+                    throw new Exception("Text can be a maximum of 1028 characters.");
             }
         }
 

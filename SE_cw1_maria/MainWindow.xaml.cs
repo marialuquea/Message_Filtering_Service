@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Windows.Input;
 using System;
+using System.Text.RegularExpressions;
 
 namespace SE_cw1_maria
 {
@@ -167,7 +168,20 @@ namespace SE_cw1_maria
         private void email_process(Message message)
         {
             Email email = new Email();
-            
+
+            List<string> incidentList = new List<string>();
+            incidentList.Add("theft");
+            incidentList.Add("staffattack");
+            incidentList.Add("atmtheft");
+            incidentList.Add("raid");
+            incidentList.Add("customerattack");
+            incidentList.Add("staffabuse");
+            incidentList.Add("bombthreat");
+            incidentList.Add("terrorism");
+            incidentList.Add("suspiciousincident");
+            incidentList.Add("intelligence");
+            incidentList.Add("cashloss");
+
             //string sentence = "maria@gmail.com ,SIRhello, 99-99-99 ,Theft, Hi";
             string sentence = message.body;
             
@@ -175,19 +189,35 @@ namespace SE_cw1_maria
             {
                 email.id = message.id; // ID
                 email.body = message.body; // BODY 
-                email.Sender = sentence.Split(' ')[0]; //SENDER
+                email.Sender = sentence.Split(',')[0]; //SENDER
                 email.Subject = sentence.Split(',')[1]; // SUBJECT
 
                 // SIGNIFICANT INCIDENT REPORT
-                if ((email.Subject).StartsWith("SIR")) 
+                if ((email.Subject).Contains("SIR")) 
                 {
                     email.Text =
                         sentence.Split(',')[2] + ", " +
                         sentence.Split(',')[3] + ", " +
-                        sentence.Split(',')[4];  
+                        sentence.Split(',')[4];
 
-                    SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
-                    sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
+                    Boolean found = false;
+
+                    // check nature of incident
+                    foreach (string incident in incidentList)
+                    {
+                        string word = (((email.Text).Split(',')[1]).ToLower());
+                        word = Regex.Replace(word, @"\s+", "");
+
+                        if (word.Equals(incident))
+                        {
+                            SIR.Add((email.Text).Split(',')[0], (email.Text).Split(',')[1]);
+                            sirList.Items.Add((email.Text).Split(',')[0] + ", " + (email.Text).Split(',')[1]);
+                            found = true;
+                        }
+                    }
+
+                    if (!found)
+                        MessageBox.Show("Nature of incident not found.");
                     
                 }
                 // STANDARD EMAIL MESSAGE
@@ -212,7 +242,7 @@ namespace SE_cw1_maria
                 JsonSave save = new JsonSave();
                 save.outputFile(data);
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }

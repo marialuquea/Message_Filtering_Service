@@ -1,3 +1,3 @@
 e123
-e123123123 maria@gmail.com % subject % HELLO MA FREN
-e123123123 maria@gmail.com % SIR 12/12/18 % 12-12-12 ,ROBBERY, there has been a massive robbery woo woo
+e123123123 maria@gmail.com , subject , HELLO MA FREN
+e123123123 maria@gmail.com ,SIR 12/12/18 , 12-12-12 ,ROBBERY, there has been a massive robbery woo woo
