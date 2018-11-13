@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Input;
 using System;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace SE_cw1_maria
 {
@@ -23,7 +24,8 @@ namespace SE_cw1_maria
         Dictionary<string, string> SIR = new Dictionary<string, string>();
         List<string> mentions = new List<string>();
         Dictionary<string, int> hashtags = new Dictionary<string, int>();
-        List<object> data = new List<object>();
+        List<Message> data_out = new List<Message>();
+        List<Message> data_in = new List<Message>();
 
         public MainWindow()
         {
@@ -45,57 +47,151 @@ namespace SE_cw1_maria
         // UPLOAD FILE TO LISTBOX
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
+            try
             {
-                //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
-                string json = File.ReadAllText(openFileDialog.FileName);
-
-                //data = JsonConvert.DeserializeObject<List<object>>(json);
-
-                foreach (string line in File.ReadAllLines(openFileDialog.FileName))
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
                 {
-                    lines.Items.Add(line);
+                    string ext = Path.GetExtension(openFileDialog.FileName);
+
+                    if (ext.Equals(".json"))
+                    {
+                        System.IO.StreamReader fileJson = new System.IO.StreamReader(openFileDialog.FileName);
+                        
+                        string lineJson = "";
+                        string tempObj = "";
+
+                        while ((lineJson = fileJson.ReadLine()) != null)
+                        {
+                            string[] objects = lineJson.Split('}');
+                            
+                            foreach (string obj in objects)
+                            {
+                                if (obj == String.Empty)
+                                    break;
+                                
+                                // JObject json1 = JObject.Parse(obj);
+                                dynamic json = JsonConvert.DeserializeObject(obj);
+                                string id = (string)json["id"][0];
+
+                                //string id = obj.Substring(obj.IndexOf("id"));
+                                tempObj = obj + "}";
+
+                                Message message = new Message();
+
+                                if (Regex.IsMatch(id, "S"))
+                                {
+                                    Sms sms = JsonConvert.DeserializeObject<Sms>(obj);
+
+                                    message.id = sms.id;
+                                    message.body = sms.body;
+
+                                    JsonLines.Items.Add(sms.id);
+                                    data_in.Add(message);
+                                }
+                                else if (Regex.IsMatch(id, "E"))
+                                {
+                                    Email email = JsonConvert.DeserializeObject<Email>(obj);
+
+                                    message.id = email.id;
+                                    message.body = email.body;
+
+                                    JsonLines.Items.Add(email.id);
+                                    data_in.Add(message);
+                                }
+                                else if (Regex.IsMatch(id, "T"))
+                                {
+                                    Tweet tweet = JsonConvert.DeserializeObject<Tweet>(obj);
+
+                                    message.id = tweet.id;
+                                    message.body = tweet.body;
+
+                                    JsonLines.Items.Add(tweet.id);
+                                    data_in.Add(message);
+                                }
+                                else
+                                {
+                                    MessageBox.Show("ID is in wrong format.");
+                                }
+                            }
+                        }
+
+                    }
+                    else if (ext.Equals(".txt"))
+                    {
+                        string json = File.ReadAllText(openFileDialog.FileName);
+                       
+                        foreach (string line in File.ReadAllLines(openFileDialog.FileName))
+                        {
+                            lines.Items.Add(line);
+                        }
+                    }
+                }
+                else
+                {
+                    label.Text = "Your file is empty.";
                 }
             }
-            else
+            catch (Exception a)
             {
-                label.Text = "You did not choose a file idiot.";
-            }
-               
+                MessageBox.Show(a.Message);
+            } 
         }
 
         // READ LINE OF FILE
         private void lines_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (lines.SelectedItem != null)
+            try
             {
-
                 Message message = new Message();
-
-                try
-                {
-                    string line = Convert.ToString(lines.SelectedItem);
-
-                    message.id = line.Split(' ')[0].ToUpper(); // MESSAGE ID
-                    
-                    // if the message header has first a letter and then 9 numbers:
-                    int i = line.IndexOf(" ") + 1;
-                    string str = line.Substring(i); // delete the first word
-                    message.body = str;
-
-                    if ((message.id)[0].Equals('S')) { sms_process(message); }
-                    else if ((message.id)[0].Equals('E')) { email_process(message); }
-                    else if ((message.id)[0].Equals('T')) { tweet_process(message); }
-                    else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
-                    
-                }
-                catch (ArgumentException a)
-                {
-                    MessageBox.Show(a.Message);
-                }
                 
+                string line = Convert.ToString(lines.SelectedItem);
+
+                message.id = line.Split(' ')[0].ToUpper(); // MESSAGE ID
+                    
+                // if the message header has first a letter and then 9 numbers:
+                int i = line.IndexOf(" ") + 1;
+                string str = line.Substring(i); // delete the first word
+                message.body = str;
+
+                if ((message.id)[0].Equals('S')) { sms_process(message); }
+                else if ((message.id)[0].Equals('E')) { email_process(message); }
+                else if ((message.id)[0].Equals('T')) { tweet_process(message); }
+                else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
+                    
             }
+            catch (ArgumentException a)
+            {
+                MessageBox.Show(a.Message);
+            }
+        }
+
+        // ADD JSON IDs TO PROCESS
+        private void JsonLines_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                // read id
+                string line = Convert.ToString(JsonLines.SelectedItem);
+
+                // search for object with that id in data in
+                foreach (Message message in data_in)
+                {
+                    if (line.Equals(message.id))
+                    {
+                        // depending on type, select process
+                        if ((message.id)[0].Equals('S')) { sms_process(message); }
+                        else if ((message.id)[0].Equals('E')) { email_process(message); }
+                        else if ((message.id)[0].Equals('T')) { tweet_process(message); }
+                    }
+                }
+            }
+            catch (Exception b)
+            {
+                MessageBox.Show(b.Message);
+            }
+
+            
         }
 
         // CLICK BUTTON TO PROCESS MESSAGE
@@ -149,9 +245,9 @@ namespace SE_cw1_maria
                 sms.Text = newM;
 
                 // OUTPUT TO FILE
-                data.Add(sms);
+                data_out.Add(sms);
                 JsonSave save = new JsonSave();
-                save.outputFile(data);
+                save.outputFile(data_out);
 
                 // SHOW RESULTS
                 label.Text = "ID: " + sms.id;
@@ -238,9 +334,9 @@ namespace SE_cw1_maria
                 label3.Text = "Text: " + email.Text;
                 
                 // SAVE IN JSON FILE
-                data.Add(email);
+                data_out.Add(email);
                 JsonSave save = new JsonSave();
-                save.outputFile(data);
+                save.outputFile(data_out);
             }
             catch (Exception e)
             {
@@ -299,9 +395,9 @@ namespace SE_cw1_maria
                 tweet.Text = newM;
 
                 //Output file
-                data.Add(tweet);
+                data_out.Add(tweet);
                 JsonSave save = new JsonSave();
-                save.outputFile(data);
+                save.outputFile(data_out);
 
                 // SHOW RESULTS
                 label.Text = "ID: " + tweet.id;

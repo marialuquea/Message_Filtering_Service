@@ -22,7 +22,8 @@
         <TextBox Name="label" HorizontalAlignment="Left" Height="23" Margin="9,232,0,0" TextWrapping="Wrap" Text="ID: " VerticalAlignment="Top" Width="258"/>
         <TextBox Name="label2" HorizontalAlignment="Left" Height="23" Margin="9,260,0,0" TextWrapping="Wrap" Text="Sender:" VerticalAlignment="Top" Width="258"/>
         <TextBox Name="label3" HorizontalAlignment="Left" Height="65" Margin="9,288,0,0" TextWrapping="Wrap" Text="Text:" VerticalAlignment="Top" Width="258"/>
-        <ListBox Name="lines" HorizontalAlignment="Left" Height="269" Margin="284,110,0,0" VerticalAlignment="Top" Width="216" MouseDoubleClick="lines_MouseDoubleClick"></ListBox>
+        <ListBox Name="lines" HorizontalAlignment="Left" Height="122" Margin="284,110,0,0" VerticalAlignment="Top" Width="216" MouseDoubleClick="lines_MouseDoubleClick"></ListBox>
         <Label Content="Napier Bank Message Filtering Service" HorizontalAlignment="Left" Margin="120,21,0,0" VerticalAlignment="Top" Height="42" Width="571" FontFamily="OCR A Extended" FontSize="24"/>
+        <ListBox x:Name="JsonLines" HorizontalAlignment="Left" Height="122" Margin="284,237,0,0" VerticalAlignment="Top" Width="216" MouseDoubleClick="JsonLines_MouseDoubleClick"/>
     </Grid>
 </Window>
