@@ -69,19 +69,23 @@ namespace SE_cw1_maria
                             {
                                 if (obj == String.Empty)
                                     break;
-                                
-                                // JObject json1 = JObject.Parse(obj);
-                                dynamic json = JsonConvert.DeserializeObject(obj);
-                                string id = (string)json["id"][0];
 
-                                //string id = obj.Substring(obj.IndexOf("id"));
-                                tempObj = obj + "}";
+                                // JObject json1 = JObject.Parse(obj);
+                                // dynamic json = JsonConvert.DeserializeObject(obj);
+                                // string id = (string)json["id"][0];
+                                
+                                string id_body = obj.Substring(obj.IndexOf("id")); // id and body
+                                string id = id_body.Split(',')[0]; // id
+                                tempObj = obj + "}"; // THE JSON STRING
 
                                 Message message = new Message();
 
                                 if (Regex.IsMatch(id, "S"))
                                 {
-                                    Sms sms = JsonConvert.DeserializeObject<Sms>(obj);
+                                    // var sms1 = JsonConvert.DeserializeObject<List<Sms>>(tempObj);
+                                    var des = (Sms)Newtonsoft.Json.JsonConvert.DeserializeObject(tempObj, typeof(Sms));
+
+                                    Sms sms = des;
 
                                     message.id = sms.id;
                                     message.body = sms.body;
@@ -91,7 +95,7 @@ namespace SE_cw1_maria
                                 }
                                 else if (Regex.IsMatch(id, "E"))
                                 {
-                                    Email email = JsonConvert.DeserializeObject<Email>(obj);
+                                    Email email = JsonConvert.DeserializeObject<Email>(tempObj);
 
                                     message.id = email.id;
                                     message.body = email.body;
@@ -101,7 +105,7 @@ namespace SE_cw1_maria
                                 }
                                 else if (Regex.IsMatch(id, "T"))
                                 {
-                                    Tweet tweet = JsonConvert.DeserializeObject<Tweet>(obj);
+                                    Tweet tweet = JsonConvert.DeserializeObject<Tweet>(tempObj);
 
                                     message.id = tweet.id;
                                     message.body = tweet.body;
