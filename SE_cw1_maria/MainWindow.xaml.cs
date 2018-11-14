@@ -428,10 +428,10 @@ namespace SE_cw1_maria
                         sentence = newM;
                         foreach (string word1 in (sentence).Split(' '))
                         {
-                            if (!quarantineList.Contains(word1))
+                            if (!quarantineList.Contains(word))
                             {
-                                quarantineList.Add(word1);
-                                qList.Items.Add(word1);
+                                quarantineList.Add(word);
+                                qList.Items.Add(word);
                             }
                         }
                     }
