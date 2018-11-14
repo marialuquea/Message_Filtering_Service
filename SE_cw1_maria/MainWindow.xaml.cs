@@ -32,7 +32,7 @@ namespace SE_cw1_maria
             InitializeComponent();
             
             // ABREVIATIONS - read file
-            using (var reader = new StreamReader(@"../../../textwords.csv"))
+            using (var reader = new StreamReader(@"../../../Docs/textwords.csv"))
             {
                 while (!reader.EndOfStream)
                 {
@@ -69,24 +69,17 @@ namespace SE_cw1_maria
                             {
                                 if (obj == String.Empty)
                                     break;
-
-                                // JObject json1 = JObject.Parse(obj);
-                                // dynamic json = JsonConvert.DeserializeObject(obj);
-                                // string id = (string)json["id"][0];
                                 
                                 string id_body = obj.Substring(obj.IndexOf("id")); // id and body
                                 string id = id_body.Split(',')[0]; // id
-                                tempObj = obj + "}"; // THE JSON STRING
+                                tempObj = (obj + "}").Remove(0,1); // THE JSON STRING
 
                                 Message message = new Message();
 
                                 if (Regex.IsMatch(id, "S"))
                                 {
-                                    // var sms1 = JsonConvert.DeserializeObject<List<Sms>>(tempObj);
-                                    var des = (Sms)Newtonsoft.Json.JsonConvert.DeserializeObject(tempObj, typeof(Sms));
-
-                                    Sms sms = des;
-
+                                    Sms sms = (Sms)Newtonsoft.Json.JsonConvert.DeserializeObject(tempObj, typeof(Sms));
+                                    
                                     message.id = sms.id;
                                     message.body = sms.body;
 
@@ -184,9 +177,9 @@ namespace SE_cw1_maria
                     if (line.Equals(message.id))
                     {
                         // depending on type, select process
-                        if ((message.id)[0].Equals('S')) { sms_process(message); }
-                        else if ((message.id)[0].Equals('E')) { email_process(message); }
-                        else if ((message.id)[0].Equals('T')) { tweet_process(message); }
+                        if ((message.id)[0].Equals('S')) { sms_process(message); break; }
+                        else if ((message.id)[0].Equals('E')) { email_process(message); break; }
+                        else if ((message.id)[0].Equals('T')) { tweet_process(message); break; }
                     }
                 }
             }
@@ -433,8 +426,14 @@ namespace SE_cw1_maria
                     {
                         string newM = sentence.Replace(word, "<URL Quarantined>");
                         sentence = newM;
-                        quarantineList.Add(word);
-                        qList.Items.Add(word);
+                        foreach (string word1 in (sentence).Split(' '))
+                        {
+                            if (!quarantineList.Contains(word1))
+                            {
+                                quarantineList.Add(word1);
+                                qList.Items.Add(word1);
+                            }
+                        }
                     }
                 }
                 return sentence;

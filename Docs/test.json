@@ -1,0 +1,23 @@
+[{
+	"Sender": "637784621",
+	"Text": "hola LOL <Laughing out loud> WTF <What the f***> ROTFL <Rolling on the floor laughing> ",
+	"id": "S123345567",
+	"body": "637784621 hola LOL WTF ROTFL "
+}, {
+	"Sender": "@MARIA",
+	"Text": "@darwon @sonas #carmen #carmen https://www.google.com",
+	"id": "T123123123",
+	"body": "@MARIA @darwon @sonas #carmen #carmen https://www.google.com"
+}, {
+	"Sender": "maria@gmail.com",
+	"Subject": " this is a subject",
+	"Text": " hola gordi <URL Quarantined>",
+	"id": "E123123132",
+	"body": "maria@gmail.com, this is a subject, hola gordi https://www.a.com"
+}, {
+	"Sender": "maria@gmail.com",
+	"Subject": " SIRhello",
+	"Text": " 12-45-89,  theft,  there has been a robbery <URL Quarantined>",
+	"id": "E123123132",
+	"body": "maria@gmail.com, SIRhello, 12-45-89, theft, there has been a robbery https://www.asd.com"
+}]
