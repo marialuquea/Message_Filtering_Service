@@ -65,6 +65,8 @@ namespace SE_cw1_maria
                         {
                             string[] objects = lineJson.Split('}');
                             
+                            Array.Resize(ref objects, objects.Length - 1);
+
                             foreach (string obj in objects)
                             {
                                 if (obj == String.Empty)
@@ -232,10 +234,13 @@ namespace SE_cw1_maria
             {
                 sms.id = message.id;
                 sms.body = message.body;
-                sms.Sender = (sms.body).Substring(0, (sms.body).IndexOf(" ")); // first word (number)
+                sms.CountryCode = (sms.body).Split(' ')[0]; // first word (country code)
+                sms.Sender = sms.body.Split(' ')[1]; // second word (number)
                 int i = sms.body.IndexOf(" ") + 1;
                 string str = sms.body.Substring(i); // delete the first word
-                sms.Text = str;
+                int x = str.IndexOf(" ") + 1;
+                string str2 = str.Substring(x); // delete the second word
+                sms.Text = str2;
 
                 // ABBREVIATIONS
                 string newM = abbreviations(sms.Text);
@@ -248,7 +253,7 @@ namespace SE_cw1_maria
 
                 // SHOW RESULTS
                 label.Text = "ID: " + sms.id;
-                label2.Text = "Sender: " + sms.Sender;
+                label2.Text = "Sender: " + sms.CountryCode + ' ' + sms.Sender;
                 label3.Text = "Text: " + sms.Text;
             }
             catch (ArgumentException e)
