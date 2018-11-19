@@ -92,7 +92,7 @@ The purpose of this coursework is to develop a prototype that will validate, san
   \item a requirement analysis of the prototype created
   \item a class diagram of the system
   \item testing of the prototype
-  \item using version control to support development iteration and te mmembers collaboration
+  \item using version control to support development iteration and team members collaboration
   \item an evolution strategy, maintainability of the system, predicted maintenance costs and evolution process and methods
 \end{enumerate}
 
@@ -113,26 +113,32 @@ Class diagrams represent the structure of a system by modeling its classes, attr
     
     \section{Implementation}
 
-        \subsection{version Control Plan}
+        \subsection{Version Control Plan}
 
 This system is to be developed in agile approach, this means, dividing tasks into short phases of work and frequent reassessments and adaptations of plans. The Agile Manifesto specifies the four key values that software developers should use in order to guide their work. They state that individuals and interactions, working software, customer collaboration and responding to change are the most important aspects in agile development.
 
-For this project, Extreme programming would be the best Agile method since it would allow the team to deliver high-quality software quickly and continuously while promoting team member collaboration and communication with the client.
+For this project, Agile methods would be the best since it would allow the team to deliver high-quality software quickly and continuously while promoting team member collaboration and communication with the client.
 
-During the implementation part, version control shoul be used to 
+During the implementation part, version control should be used to help the software team manage changes to the source code over time, this allows the developers to go back and compare earlier versions of the code to help fix the mistakes without interrupting the rest of the team members.
+
+The plan would be to start with an iterative development, which means using Agile Methodologies. This development breaks down the the project into smaller chunks of code that is designed, developed and tested in repeated cycles, and with each iteration, additional features can be added until the final product is delivered.
+
+The first step is requirements gathering. In Agile development the owner describes what the final product should do using user stories, since many agile methods argue that producing a requirements document is a waste of time as requirements change all the time. In SCRUM, the user stories requirements are put on a backlog as product backlog items in an ordered list with the most important requirements at the top. The product owner is the one who orders the backlog. This backlog should be finished at the end of a sprint (2-4 weeks), and a MoSCoW Analysis should detail what features should be implemented in the next sprint backlog.
+
+Every day there will be meetings where the progress will be discussed. This promotes collaboration amongst team members since everyone will talk about what they have done since the last meeting, what they will do for the next meeting and what is stopping them from doing it. Another way of promoting collaboration is by doing paired-programming, where 2 developers use one computer and they learn from other people's ways of working, and allows them to be more open to constructive opinions.
+
+Version control is used during the whole process, the iterative development and the team's collaborations. There are three types of version control: 
+
+\begin{enumerate}
+  \item Local version control system: it only keeps the differences between the file's content at progressive stages and then recreates the file's contents  
+  \item Centralised version control system: keeps the files in a common place where all the team members have access to from their local machine. Only the last version of the files are retrieved. 
+  \item Distributed control system: stores the history of the files on each and every machine locally and syncs the local changes made by the user back to the server. This would be the best option for this system since it provides a collaborative working environment and it is easy to use and manage. 
+\end{enumerate}
  
-Choose one methodology of agile approach
-Plan to use version control (github)
-Development iteration (branches)
-Collaboration among team members (paired programming)
+During version control, the master copy of all versions is stored in a repository, which acts as a server, while the version control tools act as the clients. To see the different versions of the NBMFS system, each commit can be accompanied by a tag, which to make it easier to understand and remember will be written as a number and a description of the changes. The version control system will also record who the author was and the changes that have been made. If any team member has any problem with another member's commit, they can see who it was and discuss it together face-to-face, as well as go back to a past version if they decide it was better before. 
 
+After each sprint of the development iteration, other features should be implemented in the current version. Team members will be working on different parts of the system, together or alone (paired programming) but they all have to make sure that their parts work well with the current version before committing to the version control system, so that if they ever have to go back, they retrieve a program that does not crash. For this to happen, the version control system provides the branching tool. A branch is like having a totally separate repository where the developer can see the source code it contains and operate independently of the rest of the team members working on the master branch or other branches. When the feature is implemented with the current version and it works like required, then they can merge their branch with the master branch. Merging eliminates the need to cut and paste changes back. The conflict resolution method used will be Optimistic locking, where every developer gets to edit any file, but the version control system will not allow them to check in a file that has been updated in the repository since they last checked it out. This encourages collaboration among team members because the version control system will sometimes attempt to merge both changes but it might not be the desired outcome, therefore the team members must collaborate together to produce a version that meets both developer's requirements and works well together. 
 
-        \includegraphics[width=8cm]{images/classdiagram.jpg}
-        
-        \textbf{Figure 1 Class Diagram}
-        \vspace{2mm}
-
- 
     \section{Testing}
     
         \subsection{Test plan}
@@ -149,11 +155,31 @@ Collaboration among team members (paired programming)
         
     \section{Evolution}
     
+Evolution, software updates, or new requirements emerge when the program starts being used. Errors are found by users that developers couldn't find; performance or reliability might need to be improved; the environment might changes or new computers might be added to the system. All of these should be maintained and should keep the program working and up-to-date.
+
+The evolution processes depend on the type of software of the system, the development processes used and the knowledge that the current workers involved have of the system.
+
         \subsection{Evolution Strategy}
-    Evolution or maintenance?
+
+
+
+Evolution or maintenance?
 Maintainability of the system
 Predicted maintenance costs
-Evolution process and methods? – VERSION CONTROL – BRANCHES 
+Evolution process and methods?
 
+    
+    \section{Appendix}
+    
+    \includegraphics[width=8cm]{images/usecase.jpg}
+    
+    \textbf{Figure 1 Use Case Diagram}
+    \vspace{2mm}
+    
+    \includegraphics[width=8cm]{images/classdiagram.jpg}
+    
+    \textbf{Figure 2 Class Diagram}
+    \vspace{2mm}
+    
     
 \end{document}
