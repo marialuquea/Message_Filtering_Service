@@ -19,7 +19,7 @@ namespace SE_cw1_maria
                 // if the id is 10 chars long (1 letter and 9 numbers) and the other 9 are numbers
                 if((value.Length == 10) && (int.TryParse((value.Remove(0, 1)), out int k)))
                 {
-                    _id = value;
+                    _id = value.ToUpper();
                 }
                 else
                 {
