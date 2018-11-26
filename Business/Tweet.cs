@@ -16,7 +16,7 @@ namespace SE_cw1_maria
             get { return _sender; }
             set
             {
-                if (value.StartsWith("@") && (value.Length < 16))
+                if (value.StartsWith("@") && (value.Length < 16) && (value.Length > 0))
                     _sender = value;
                 else
                     throw new ArgumentException("Sender must start with @ and have a max of 15 characters.");
@@ -28,7 +28,7 @@ namespace SE_cw1_maria
             get { return _text; }
             set
             {
-                if (value.Length < 141)
+                if ((value.Length < 141) && (value.Length > 0))
                     _text = value;
                 else
                     throw new ArgumentException("Tweet text can only be max 140 characters long.");

@@ -31,7 +31,13 @@ namespace SE_cw1_maria
         public string body
         {
             get { return _body; }
-            set { _body = value; }
+            set
+            {
+                if (value.Length > 0)
+                    _body = value;
+                else
+                    throw new ArgumentException("Body can't be empty");
+            }
         }
     }
 }

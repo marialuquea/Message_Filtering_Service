@@ -34,7 +34,7 @@ namespace SE_cw1_maria
             get { return _subject; }
             set
             {
-                if (value.Length < 21)
+                if ((value.Length < 21) && (value.Length>0))
                     _subject = value;
                 else
                     throw new Exception("Subject can be a max of 20 characters.");

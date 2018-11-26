@@ -18,8 +18,6 @@ namespace SE_cw1_maria
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<string> abb = new List<string>();
-        List<string> def = new List<string>();
         List<string> quarantineList = new List<string>();
         Dictionary<string, string> SIR = new Dictionary<string, string>();
         List<string> mentions = new List<string>();
@@ -27,21 +25,11 @@ namespace SE_cw1_maria
         List<Message> data_out = new List<Message>();
         List<Message> data_in = new List<Message>();
 
+        Abbreviations abbreviations = new Abbreviations();
+
         public MainWindow()
         {
             InitializeComponent();
-            
-            // ABREVIATIONS - read file
-            using (var reader = new StreamReader(@"../../../Docs/textwords.csv"))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
-                    abb.Add(values[0]);
-                    def.Add(values[1]);
-                }
-            }
         }
 
         // UPLOAD FILE TO LISTBOX
@@ -159,7 +147,7 @@ namespace SE_cw1_maria
                 else { MessageBox.Show("Insert a valid ID please starting with either S, E or T."); }
                     
             }
-            catch (ArgumentException a)
+            catch (Exception a)
             {
                 MessageBox.Show(a.Message);
             }
@@ -214,7 +202,7 @@ namespace SE_cw1_maria
                     else if (header[0].Equals('E')) { email_process(message); }
                     else if (header[0].Equals('T')) { tweet_process(message); }
                 }
-                catch (ArgumentException ee)
+                catch (Exception ee)
                 {
                     MessageBox.Show(ee.Message);
                 }
@@ -243,7 +231,7 @@ namespace SE_cw1_maria
                 sms.Text = str2;
 
                 // ABBREVIATIONS
-                string newM = abbreviations(sms.Text);
+                string newM = abbreviations.main(sms.Text);
                 sms.Text = newM;
 
                 // OUTPUT TO FILE
@@ -256,7 +244,7 @@ namespace SE_cw1_maria
                 label2.Text = "Sender: " + sms.CountryCode + ' ' + sms.Sender;
                 label3.Text = "Text: " + sms.Text;
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
@@ -393,7 +381,7 @@ namespace SE_cw1_maria
                 }
 
                 // ABBREVIATIONS
-                string newM = abbreviations(tweet.Text);
+                string newM = abbreviations.main(tweet.Text);
                 tweet.Text = newM;
 
                 //Output file
@@ -414,7 +402,7 @@ namespace SE_cw1_maria
                     trendList.Items.Add(item);
                 }
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
@@ -449,60 +437,6 @@ namespace SE_cw1_maria
             }
         }
         
-        private string abbreviations(string sentence)
-        {
-            try
-            {
-                foreach (string word in (sentence).Split(' '))
-                {
-                    foreach (string abr in abb)
-                    {
-                        if (word.Equals(abr))
-                        {
-                            // Find the definition
-                            int index = abb.IndexOf(abr);
-                            string all = def[index];
-
-                            // Replace word for actual words
-                            string words = word + " <" + all + ">";
-
-                            int index2 = sentence.IndexOf(word);
-
-                            char wordAfter;
-                            string wordAfter2;
-
-                            try // if it's not the last word
-                            {
-                                wordAfter = sentence[index2 + 1 + word.Length];
-
-                                wordAfter2 = wordAfter + "";
-
-                                if (wordAfter2.Contains("<"))
-                                {
-                                    break;
-                                }
-                                else
-                                {
-                                    string newM = (sentence).Replace(word, words);
-                                    sentence = newM;
-                                }
-                            }
-                            catch // if it is the last word
-                            {
-                                string newM = (sentence).Replace(word, words);
-                                sentence = newM;
-                            }
-                        }
-                    }
-                }
-                return (sentence);
-            }
-            catch
-            {
-                return sentence;
-            }
-            
-        }
         
     }
 }
