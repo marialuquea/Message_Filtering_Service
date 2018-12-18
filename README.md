@@ -8,6 +8,6 @@ The purpose of this coursework is to develop a prototype that will validate, san
 4. using version control to support development iteration and team members collaboration
 5. an evolution strategy, maintainability of the system, predicted maintenance costs and evolution process and methods
 
-Open this project in  Visual Studio
+**Open this project in  Visual Studio**
 
 ![Screenshot](Docs/screenshot.png)
